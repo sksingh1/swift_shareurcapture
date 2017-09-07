@@ -79,6 +79,8 @@ class ViewController: UIViewController , MKMapViewDelegate, UIImagePickerControl
     }
     @IBAction func selectPreview(_ sender: AnyObject) {
     }
+    @IBAction func selectHistory(_ sender: AnyObject) {
+    }
     var locationManager = CLLocationManager()
     //@IBOutlet weak var passText: UITextField!
     //@IBOutlet weak var hideButton: UIButton!

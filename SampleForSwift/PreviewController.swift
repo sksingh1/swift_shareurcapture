@@ -7,12 +7,14 @@
 //
 
 import UIKit
-
+import CoreData
 class PreviewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var locationbutton: UIButton!
     @IBOutlet weak var msgtext: UITextView!
     @IBOutlet weak var locationlabel: UILabel!
     @IBOutlet weak var captureImageview: UIImageView!
+    var context: NSManagedObjectContext?
+
     var setstr: NSString!
     var address: NSString!
     var captureImage: UIImage!
@@ -30,6 +32,7 @@ class PreviewController: UIViewController, UITextViewDelegate {
     actionSheetController.addAction(cancelAction)
     self.present(actionSheetController, animated: true, completion: nil)
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.msgtext.delegate=self;
@@ -69,7 +72,49 @@ class PreviewController: UIViewController, UITextViewDelegate {
         txtView.becomeFirstResponder()
         return true
     }
-    
+     @IBAction func submittaction(_ sender: AnyObject) {
+        
+       context = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+        let entity =  NSEntityDescription.entity(forEntityName: "Entity", in: context!)
+        
+        let transc = NSManagedObject(entity: entity!, insertInto: context)
+
+        let imageData = NSData(data: UIImageJPEGRepresentation(captureImage, 1.0)!)
+        //set the entity values
+        transc.setValue(self.title, forKey: "categaryoption")
+        transc.setValue(msgtext.text, forKey: "comments")
+        transc.setValue(locationlabel.text, forKey: "location")
+        transc.setValue(imageData, forKey: "image")
+        //save the object
+        do {
+            try context?.save()
+            print("saved!")
+        } catch let error as NSError  {
+            print("Could not save \(error), \(error.userInfo)")
+        } catch {
+            
+        }
+        
+        // To fetch
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
+        
+        // Create Entity Description
+        let entityDescription = NSEntityDescription.entity(forEntityName: "Entity", in: context!)
+        
+        // Configure Fetch Request
+        fetchRequest.entity = entityDescription
+        
+        do {
+            let result = try context?.fetch(fetchRequest)
+            print(result as Any)
+            
+        } catch {
+            let fetchError = error as NSError
+            print(fetchError)
+        }
+        
+       //// To delete
+     }
     /*
     // MARK: - Navigation
 
