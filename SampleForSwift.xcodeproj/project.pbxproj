@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		145264631F627BBA004A10AB /* if_Camera_1891018.png in Resources */ = {isa = PBXBuildFile; fileRef = 145264621F627BBA004A10AB /* if_Camera_1891018.png */; };
 		147753B81F4D8C5500C173E4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147753B71F4D8C5500C173E4 /* AppDelegate.swift */; };
 		147753BA1F4D8C5500C173E4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147753B91F4D8C5500C173E4 /* ViewController.swift */; };
 		147753BD1F4D8C5500C173E4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 147753BB1F4D8C5500C173E4 /* Main.storyboard */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		145264621F627BBA004A10AB /* if_Camera_1891018.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = if_Camera_1891018.png; sourceTree = "<group>"; };
 		147753B41F4D8C5500C173E4 /* SampleForSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleForSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		147753B71F4D8C5500C173E4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		147753B91F4D8C5500C173E4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 		147753AB1F4D8C5500C173E4 = {
 			isa = PBXGroup;
 			children = (
+				145264621F627BBA004A10AB /* if_Camera_1891018.png */,
 				14FFF5D71F5D5EFB00339BF3 /* Entity+CoreDataClass.swift */,
 				14FFF5D81F5D5EFB00339BF3 /* Entity+CoreDataProperties.swift */,
 				14FFF5D41F5D5E8500339BF3 /* SampleApp.xcdatamodeld */,
@@ -167,6 +170,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				145264631F627BBA004A10AB /* if_Camera_1891018.png in Resources */,
 				147753C21F4D8C5500C173E4 /* LaunchScreen.storyboard in Resources */,
 				147753CE1F4D903F00C173E4 /* button.png in Resources */,
 				147753BF1F4D8C5500C173E4 /* Assets.xcassets in Resources */,

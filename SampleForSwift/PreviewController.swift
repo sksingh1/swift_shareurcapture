@@ -8,11 +8,16 @@
 
 import UIKit
 import CoreData
-class PreviewController: UIViewController, UITextViewDelegate {
+import MobileCoreServices
+
+class PreviewController: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     @IBOutlet weak var locationbutton: UIButton!
     @IBOutlet weak var msgtext: UITextView!
     @IBOutlet weak var locationlabel: UILabel!
-    @IBOutlet weak var captureImageview: UIImageView!
+    @IBOutlet weak var captureImageview: UIImageView! 
+    var selectedimage: UIImageView! = nil
+    let imagePicker = UIImagePickerController()
+
     var context: NSManagedObjectContext?
 
     var setstr: NSString!
@@ -37,11 +42,14 @@ class PreviewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.msgtext.delegate=self;
+        imagePicker.delegate = self
         self.msgtext.text = "Write your thoughts..."
         self.msgtext.textColor = UIColor.lightGray //optional
         self.locationlabel.text = self.address as String?
         self.msgtext.returnKeyType = UIReturnKeyType.done
+        if captureImage != nil{
         self.captureImageview.image = captureImage
+        }
         // Do any additional setup after loading the view.
     }
 
@@ -126,6 +134,76 @@ class PreviewController: UIViewController, UITextViewDelegate {
         }
         
      }
+    @IBAction func selectphotoOption(_ sender: AnyObject) {
+        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Select any photo source!!", preferredStyle: .alert)
+        let cameraButton: UIAlertAction = UIAlertAction(title: "Camera", style: .default) { action -> Void in
+            //Just dismiss the action sheet
+            self.selectCamera()
+        }
+        let galleryButton: UIAlertAction = UIAlertAction(title: "Gallery", style: .default) { action -> Void in
+            //Just dismiss the action sheet
+            self.selectGallery()
+        }
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+            //Just dismiss the action sheet
+        }
+        actionSheetController.addAction(cameraButton)
+        actionSheetController.addAction(galleryButton)
+        actionSheetController.addAction(cancelAction)
+        self.present(actionSheetController, animated: true, completion: nil)
+
+    }
+    func selectCamera() {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera){
+            print("Button capture")
+            
+            imagePicker.sourceType = UIImagePickerControllerSourceType.camera;
+            imagePicker.mediaTypes = [kUTTypeImage as String]
+            imagePicker.allowsEditing = false
+            
+            self.present(imagePicker, animated: true, completion: nil)
+        }
+        else{
+            let actionSheetController: UIAlertController = UIAlertController(title: "No Device", message: "Camera is not available!", preferredStyle: .alert)
+            
+            //Create and add the Cancel action
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .default) { action -> Void in
+                //Just dismiss the action sheet
+            }
+            actionSheetController.addAction(cancelAction)
+            self.present(actionSheetController, animated: true, completion: nil)
+        }
+    }
+    func selectGallery() {
+        
+        imagePicker.sourceType = UIImagePickerControllerSourceType.savedPhotosAlbum
+        imagePicker.allowsEditing = false
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        /// chcek if you can return edited image that user choose it if user already edit it(crop it), return it as image
+        if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+            
+            /// if user update it and already got it , just return it to 'self.imgView.image'
+            self.captureImage = editedImage
+            self.captureImageview.image = editedImage
+            
+            /// else if you could't find the edited image that means user select original image same is it without editing .
+        } else if let orginalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            
+            /// if user update it and already got it , just return it to 'self.imgView.image'.
+            self.captureImage = orginalImage
+            self.captureImageview.image = orginalImage
+            
+        }
+        else { print ("error") }
+        
+        /// if the request successfully done just dismiss
+        picker.dismiss(animated: true, completion: nil)
+        
+    }
     /*
     // MARK: - Navigation
 
