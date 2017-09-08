@@ -113,7 +113,6 @@ class PreviewController: UIViewController, UITextViewDelegate {
             print(fetchError)
         }
         
-       //// To delete
      }
     /*
     // MARK: - Navigation

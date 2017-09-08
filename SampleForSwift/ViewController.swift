@@ -82,8 +82,6 @@ class ViewController: UIViewController , MKMapViewDelegate, UIImagePickerControl
     @IBAction func selectHistory(_ sender: AnyObject) {
     }
     var locationManager = CLLocationManager()
-    //@IBOutlet weak var passText: UITextField!
-    //@IBOutlet weak var hideButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,18 +105,6 @@ class ViewController: UIViewController , MKMapViewDelegate, UIImagePickerControl
     }
     // MARK: - UIImagePickerControllerDelegate Methods
     
-//    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]){
-//        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
-//            self.selectedimage.image = image
-//        }
-//        else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-//            self.selectedimage.image = image
-//        } else{
-//            print("Something went wrong")
-//        }
-//        
-//        self.dismiss(animated: true, completion: nil)
-//    }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         /// chcek if you can return edited image that user choose it if user already edit it(crop it), return it as image

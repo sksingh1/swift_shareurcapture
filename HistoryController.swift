@@ -26,7 +26,6 @@ class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataS
         context = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
         let sortDescriptor = NSSortDescriptor(key: "categaryoption", ascending: true)
 
-        //let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Entity")
         fetchRequest.sortDescriptors = [sortDescriptor]
         fetchRequest.fetchBatchSize = 20
@@ -103,22 +102,12 @@ class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataS
         return 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "NewRowCell")
-//        (cell?.contentView.viewWithTag(1) as! UILabel).text = "hey"
-//        (cell?.contentView.viewWithTag(2) as! UILabel).text = "hey"
-//        (cell?.contentView.viewWithTag(3) as! UIImageView).image = UIImage.init(named: "button.png")
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewRowCell")
-        //let cellContact = fetchedResultsController.object(at: indexPath as! Entity)
         let cellContact = fetchedResultsController?.object(at: indexPath) as! Entity
-
-        //if let cellContact = fetchedResultsController {
-            //cell.textLabel?.text = cellContact.name
             (cell?.contentView.viewWithTag(1) as! UILabel).text = cellContact.location
             (cell?.contentView.viewWithTag(2) as! UILabel).text = cellContact.comments
             (cell?.contentView.viewWithTag(3) as! UIImageView).image = UIImage(data:cellContact.image! as Data)
-            
-        //}
         
         
         return cell!
