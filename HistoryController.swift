@@ -52,6 +52,16 @@ class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataS
             //print("chat", chats)
             if (result?.count)! > 0 {
                 historytable.isHidden = false
+            }else{
+                let actionSheetController: UIAlertController = UIAlertController(title: "", message: "No history available!", preferredStyle: .alert)
+                
+                //Create and add the Cancel action
+                let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .default) { action -> Void in
+                    //Just dismiss the action sheet
+                    self.navigationController?.popViewController(animated: true)
+                }
+                actionSheetController.addAction(cancelAction)
+                self.present(actionSheetController, animated: true, completion: nil)
             }
             print(result as Any)
             
@@ -78,6 +88,15 @@ class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataS
             print("delete")
             let result = try context?.fetch(fetchRequestdelete)
             print(result as Any)
+            let actionSheetController: UIAlertController = UIAlertController(title: "", message: "No history available!", preferredStyle: .alert)
+            
+            //Create and add the Cancel action
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .default) { action -> Void in
+                //Just dismiss the action sheet
+                self.navigationController?.popViewController(animated: true)
+            }
+            actionSheetController.addAction(cancelAction)
+            self.present(actionSheetController, animated: true, completion: nil)
             
         } catch {
             let fetchError = error as NSError
@@ -107,7 +126,10 @@ class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataS
         let cellContact = fetchedResultsController?.object(at: indexPath) as! Entity
             (cell?.contentView.viewWithTag(1) as! UILabel).text = cellContact.location
             (cell?.contentView.viewWithTag(2) as! UILabel).text = cellContact.comments
+            (cell?.contentView.viewWithTag(4) as! UILabel).text = cellContact.categaryoption
+            if cellContact.image != nil{
             (cell?.contentView.viewWithTag(3) as! UIImageView).image = UIImage(data:cellContact.image! as Data)
+            }
         
         
         return cell!

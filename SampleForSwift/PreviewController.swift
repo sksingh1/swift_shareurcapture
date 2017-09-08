@@ -18,6 +18,7 @@ class PreviewController: UIViewController, UITextViewDelegate {
     var setstr: NSString!
     var address: NSString!
     var captureImage: UIImage!
+    var imageData: NSData!
   @IBAction func locationbuttonaction(_ sender: AnyObject) {
     let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Do you want to change your current location!", preferredStyle: .alert)
     let okayaction: UIAlertAction = UIAlertAction(title: "Yes, please", style: .default) { action -> Void in
@@ -78,8 +79,10 @@ class PreviewController: UIViewController, UITextViewDelegate {
         let entity =  NSEntityDescription.entity(forEntityName: "Entity", in: context!)
         
         let transc = NSManagedObject(entity: entity!, insertInto: context)
-
-        let imageData = NSData(data: UIImageJPEGRepresentation(captureImage, 1.0)!)
+        
+        if captureImage != nil {
+         imageData = NSData(data: UIImageJPEGRepresentation(captureImage, 1.0)!)
+        }
         //set the entity values
         transc.setValue(self.title, forKey: "categaryoption")
         transc.setValue(msgtext.text, forKey: "comments")
@@ -89,6 +92,15 @@ class PreviewController: UIViewController, UITextViewDelegate {
         do {
             try context?.save()
             print("saved!")
+            let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Successfully submitted!", preferredStyle: .alert)
+            
+            //Create and add the Cancel action
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .default) { action -> Void in
+                //Just dismiss the action sheet
+            }
+            actionSheetController.addAction(cancelAction)
+            self.present(actionSheetController, animated: true, completion: nil)
+
         } catch let error as NSError  {
             print("Could not save \(error), \(error.userInfo)")
         } catch {
