@@ -10,11 +10,15 @@ import UIKit
 import CoreLocation
 import MapKit
 import MobileCoreServices
+import AssetsLibrary
 
+//typedef; void (^ALAssetsLibraryAssetForURLResultBlock)(ALAsset, *asset);
+//typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError, *error);
 class ViewController: UIViewController , MKMapViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate {
     
     var selectOptionValue: NSString!
     var address: NSString!
+    var videoURL: NSURL!
     var selectedimage: UIImageView! = nil
     let imagePicker = UIImagePickerController()
     var new_placemark: MKPlacemark! = nil
@@ -55,7 +59,7 @@ class ViewController: UIViewController , MKMapViewDelegate, UIImagePickerControl
             print("Button capture")
             
             imagePicker.sourceType = UIImagePickerControllerSourceType.camera;
-            imagePicker.mediaTypes = [kUTTypeImage as String]
+            imagePicker.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
             imagePicker.allowsEditing = false
             
             self.present(imagePicker, animated: true, completion: nil)
@@ -75,7 +79,11 @@ class ViewController: UIViewController , MKMapViewDelegate, UIImagePickerControl
         
         imagePicker.sourceType = UIImagePickerControllerSourceType.savedPhotosAlbum
         imagePicker.allowsEditing = false
+        imagePicker.videoMaximumDuration = 120.0
+        imagePicker.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
         self.present(imagePicker, animated: true, completion: nil)
+        
+
     }
     @IBAction func selectPreview(_ sender: AnyObject) {
     }
@@ -108,6 +116,8 @@ class ViewController: UIViewController , MKMapViewDelegate, UIImagePickerControl
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         /// chcek if you can return edited image that user choose it if user already edit it(crop it), return it as image
+        let mediatype = info[UIImagePickerControllerMediaType] as! String;
+        if(mediatype == kUTTypeImage as String){
         if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             
             /// if user update it and already got it , just return it to 'self.imgView.image'
@@ -120,7 +130,9 @@ class ViewController: UIViewController , MKMapViewDelegate, UIImagePickerControl
             self.selectedimage.image = orginalImage
         }
         else { print ("error") }
-        
+        }else{
+            videoURL = info[UIImagePickerControllerMediaURL] as! NSURL
+        }
         /// if the request successfully done just dismiss
         picker.dismiss(animated: true, completion: nil)
         
@@ -287,6 +299,9 @@ class ViewController: UIViewController , MKMapViewDelegate, UIImagePickerControl
             }
             if address != nil {
             controller.address = self.address
+            }
+            if(videoURL != nil){
+            controller.videodataselected = self.videoURL;
             }
     }
 

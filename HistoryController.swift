@@ -8,6 +8,12 @@
 
 import UIKit
 import CoreData
+import MobileCoreServices
+import AssetsLibrary
+import AVFoundation
+import AVKit
+import MediaPlayer
+
 class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataSource,NSFetchedResultsControllerDelegate {
     
     @IBOutlet var historytable: UITableView!
@@ -130,9 +136,52 @@ class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataS
             if cellContact.image != nil{
             (cell?.contentView.viewWithTag(3) as! UIImageView).image = UIImage(data:cellContact.image! as Data)
             }
-        
+        if(cellContact.videourl != nil){
+            let videoName = NSString(format:"%ld, %@",indexPath.row, "video.mp4")
+
+            let videoPath = getDocumentsDirectory().appendingPathComponent(videoName as String)
+            (cellContact.videourl!).write(toFile: videoPath, atomically: true)
+            
+            let asset : AVAsset = AVAsset(url:NSURL(fileURLWithPath:videoPath) as URL) as AVAsset
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            let time = CMTimeMakeWithSeconds(0.5, 1000)
+            var actualTime = kCMTimeZero
+            var thumbnail : CGImage?
+            do {
+                thumbnail = try imageGenerator.copyCGImage(at: time, actualTime: &actualTime)
+                let image:UIImage = UIImage( cgImage: thumbnail! )
+                (cell?.contentView.viewWithTag(3) as! UIImageView).image = image
+            }
+            catch let error as NSError {
+                print(error.localizedDescription)
+            }
+
+        }
         
         return cell!
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+       let cellContact = fetchedResultsController?.object(at: indexPath) as! Entity
+        if(cellContact.videourl != nil){
+            let videoName = NSString(format:"%ld, %@",indexPath.row, "video.mp4")
+            
+            let videoPath = getDocumentsDirectory().appendingPathComponent(videoName as String)
+            
+            //let videoURL = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
+            let player = AVPlayer(url: NSURL(fileURLWithPath:videoPath) as URL!)
+            let playerViewController = AVPlayerViewController()
+            playerViewController.player = player
+            playerViewController.showsPlaybackControls = true
+            self.present(playerViewController, animated: true) {
+                playerViewController.player!.play()
+            }
+        }
+        //your code...
+    }
+    func getDocumentsDirectory() -> NSString {
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = paths[0]
+        return documentsDirectory as NSString
     }
     /*
     // MARK: - Navigation

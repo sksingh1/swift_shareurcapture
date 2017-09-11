@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SampleForSwift/ViewController.swift"
-            timestampString = "526299000.446903"
+            timestampString = "526817925.348854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
             landmarkName = "selectHistory(_:)"
             landmarkType = "7">
          </BreakpointContent>

@@ -20,5 +20,7 @@ extension Entity {
     @NSManaged public var comments: String?
     @NSManaged public var location: String?
     @NSManaged public var image: NSData?
+    @NSManaged public var videourl: NSData?
+    
 
 }

@@ -9,6 +9,9 @@
 import UIKit
 import CoreData
 import MobileCoreServices
+import AssetsLibrary
+import AVFoundation
+import MediaPlayer
 
 class PreviewController: UIViewController, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     @IBOutlet weak var locationbutton: UIButton!
@@ -21,9 +24,11 @@ class PreviewController: UIViewController, UITextViewDelegate, UIImagePickerCont
     var context: NSManagedObjectContext?
 
     var setstr: NSString!
+    var videodataselected: NSURL!
     var address: NSString!
     var captureImage: UIImage!
     var imageData: NSData!
+    var videoData: NSData!
   @IBAction func locationbuttonaction(_ sender: AnyObject) {
     let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Do you want to change your current location!", preferredStyle: .alert)
     let okayaction: UIAlertAction = UIAlertAction(title: "Yes, please", style: .default) { action -> Void in
@@ -47,12 +52,29 @@ class PreviewController: UIViewController, UITextViewDelegate, UIImagePickerCont
         self.msgtext.textColor = UIColor.lightGray //optional
         self.locationlabel.text = self.address as String?
         self.msgtext.returnKeyType = UIReturnKeyType.done
-        if captureImage != nil{
-        self.captureImageview.image = captureImage
-        }
+        
         // Do any additional setup after loading the view.
     }
-
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        if captureImage != nil{
+            self.captureImageview.image = captureImage
+        }else if videodataselected != nil{
+            let asset : AVAsset = AVAsset(url:videodataselected as URL) as AVAsset
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            let time = CMTimeMakeWithSeconds(0.5, 1000)
+            var actualTime = kCMTimeZero
+            var thumbnail : CGImage?
+            do {
+                thumbnail = try imageGenerator.copyCGImage(at: time, actualTime: &actualTime)
+                let image:UIImage = UIImage( cgImage: thumbnail! )
+                self.captureImageview.image = image
+            }
+            catch let error as NSError {
+                print(error.localizedDescription)
+            }
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -87,7 +109,12 @@ class PreviewController: UIViewController, UITextViewDelegate, UIImagePickerCont
         let entity =  NSEntityDescription.entity(forEntityName: "Entity", in: context!)
         
         let transc = NSManagedObject(entity: entity!, insertInto: context)
-        
+        //videoData = [NSData dataWithContentsOfURL:videodataselected];
+        if(videodataselected != nil){
+            videoData = try? NSData(contentsOf: videodataselected as URL)
+            //videoData = NSData(data:content)
+
+        }
         if captureImage != nil {
          imageData = NSData(data: UIImageJPEGRepresentation(captureImage, 1.0)!)
         }
@@ -96,6 +123,7 @@ class PreviewController: UIViewController, UITextViewDelegate, UIImagePickerCont
         transc.setValue(msgtext.text, forKey: "comments")
         transc.setValue(locationlabel.text, forKey: "location")
         transc.setValue(imageData, forKey: "image")
+        transc.setValue(videoData, forKey: "videourl")
         //save the object
         do {
             try context?.save()
@@ -179,27 +207,35 @@ class PreviewController: UIViewController, UITextViewDelegate, UIImagePickerCont
         
         imagePicker.sourceType = UIImagePickerControllerSourceType.savedPhotosAlbum
         imagePicker.allowsEditing = false
+        imagePicker.videoMaximumDuration = 120.0
+        imagePicker.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
         self.present(imagePicker, animated: true, completion: nil)
+
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
+        let mediatype = info[UIImagePickerControllerMediaType] as! String;
+        if(mediatype == kUTTypeImage as String){
         /// chcek if you can return edited image that user choose it if user already edit it(crop it), return it as image
         if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             
             /// if user update it and already got it , just return it to 'self.imgView.image'
             self.captureImage = editedImage
             self.captureImageview.image = editedImage
-            
+            videodataselected = nil
             /// else if you could't find the edited image that means user select original image same is it without editing .
         } else if let orginalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
             /// if user update it and already got it , just return it to 'self.imgView.image'.
             self.captureImage = orginalImage
             self.captureImageview.image = orginalImage
+            videodataselected = nil
             
         }
         else { print ("error") }
-        
+        }else{
+            videodataselected = info[UIImagePickerControllerMediaURL] as! NSURL
+            self.captureImage = nil
+        }
         /// if the request successfully done just dismiss
         picker.dismiss(animated: true, completion: nil)
         
