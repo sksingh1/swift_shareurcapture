@@ -143,6 +143,7 @@
 				TargetAttributes = {
 					147753B31F4D8C5500C173E4 = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = 6GKJSS2B54;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -312,6 +313,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 6GKJSS2B54;
 				INFOPLIST_FILE = SampleForSwift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = NTTDATA.SampleForSwift;
@@ -324,6 +326,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 6GKJSS2B54;
 				INFOPLIST_FILE = SampleForSwift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = NTTDATA.SampleForSwift;

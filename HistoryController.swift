@@ -19,6 +19,7 @@ class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataS
     @IBOutlet var historytable: UITableView!
     var chats = [] as! [NSDictionary]
     var context: NSManagedObjectContext?
+    var circleLayer: CAShapeLayer!
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?
 
     override func viewDidLoad() {
@@ -167,7 +168,6 @@ class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataS
             
             let videoPath = getDocumentsDirectory().appendingPathComponent(videoName as String)
             
-            //let videoURL = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
             let player = AVPlayer(url: NSURL(fileURLWithPath:videoPath) as URL!)
             let playerViewController = AVPlayerViewController()
             playerViewController.player = player
@@ -175,9 +175,64 @@ class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataS
             self.present(playerViewController, animated: true) {
                 playerViewController.player!.play()
             }
+        }else if(cellContact.image != nil){
+            let singleTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: Selector(("singleTapGestureCaptured:")))
+            singleTap.numberOfTapsRequired = 1
+            let aSelector : Selector = #selector(self.removeSubview)
+            let tapGesture = UITapGestureRecognizer(target:self, action: aSelector)
+            
+            let screenRect = UIScreen.main.bounds
+            let coverView: UIView = UIView(frame: screenRect)
+
+            coverView.frame = screenRect
+            coverView.tag = 200
+            coverView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+            
+            let singleview: UIImageView = UIImageView(frame: CGRect(x: 12, y: 18, width: self.view.frame.size.width - 25, height: self.view.frame.size.height - 92.0))
+            singleview.image = UIImage(data:cellContact.image! as Data)
+            singleview.isMultipleTouchEnabled = true
+            singleview.isUserInteractionEnabled = true
+            
+            let testLabel: UILabel = UILabel(frame: CGRect(x: 352, y: 11, width: 20, height: 20))
+            testLabel.font = UIFont.boldSystemFont(ofSize: 16.0)
+            testLabel.textColor = UIColor.red
+            testLabel.text = " X"
+            testLabel.addGestureRecognizer(tapGesture)
+            testLabel.tag = 100
+            testLabel.isMultipleTouchEnabled = true
+            testLabel.isUserInteractionEnabled = true
+            
+            
+            circleLayer = CAShapeLayer()
+            let doYourPath = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 20, height: 20))
+            circleLayer.path = doYourPath.cgPath
+            circleLayer.fillColor = UIColor.clear.cgColor
+            circleLayer.strokeColor = UIColor.red.cgColor
+            circleLayer.lineWidth = 2.0
+            testLabel.layer.addSublayer(circleLayer)
+            
+            
+            coverView.addSubview(singleview)
+            coverView.addSubview(testLabel)
+            self.view.addSubview(coverView)
+            
+            
+            
         }
+ 
         //your code...
     }
+   
+    func removeSubview(){
+            //print(sender.view?.tag as Any)
+        if self.view.viewWithTag(100) != nil {
+            let viewtoremove = self.view.viewWithTag(200)
+            viewtoremove?.removeFromSuperview()
+        }else{
+            print("No!")
+        }
+    }
+    
     func getDocumentsDirectory() -> NSString {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0]
