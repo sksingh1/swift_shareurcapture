@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HistoryController.swift"
-            timestampString = "527511845.469601"
+            timestampString = "527513316.808258"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "237"
-            endingLineNumber = "237"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
             landmarkName = "removeSubview()"
             landmarkType = "7">
          </BreakpointContent>

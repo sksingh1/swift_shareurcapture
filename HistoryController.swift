@@ -204,8 +204,9 @@ class HistoryController: UIViewController, UITableViewDelegate, UITableViewDataS
             
             
             circleLayer = CAShapeLayer()
-            let doYourPath = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 20, height: 20))
-            circleLayer.path = doYourPath.cgPath
+            let circlePath = UIBezierPath(arcCenter: CGPoint(x: 10,y: 10), radius: CGFloat(10), startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
+
+            circleLayer.path = circlePath.cgPath
             circleLayer.fillColor = UIColor.clear.cgColor
             circleLayer.strokeColor = UIColor.red.cgColor
             circleLayer.lineWidth = 2.0
